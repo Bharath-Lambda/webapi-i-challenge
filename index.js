@@ -10,21 +10,27 @@ server.use(express.json());
 server.post('/api/users', (req, res) => {
   const newUser = req.body;
 
-  db.insert(newUser)
-  .then(newUser => {
-    res.status(201).json({
-      success: true,
-      newUser
-    });
-  })
-  .catch(err => {
-    res.status(500).json({
+  if (!newUser.name || !newUser.bio) {
+    res.status(400.json({
       success: false,
-      err
+      message: "Please provide name and bio for the user."
+    }))
+  } else {
+    db.insert(newUser)
+    .then(newUser => {
+      res.status(201).json({
+        success: true,
+        newUser
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        success: false,
+        err
+      });
     });
-  });
-});
-
+    };
+})
 //GET
 server.get('/', (req, res) => {
   res.send('Hello World!');
